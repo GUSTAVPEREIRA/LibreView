@@ -1,0 +1,13 @@
+﻿version: "3.9"
+
+services:
+  postgres_db:
+    container_name: postgres
+    build: ./database
+    restart: always
+    environment:
+      - POSTGRES_USER=default
+      - POSTGRES_PASSWORD=default
+      - POSTGRES_DB=LibreReview
+    ports:
+      - "9502:5432"
