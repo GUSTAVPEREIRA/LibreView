@@ -1,4 +1,5 @@
 using System.Reflection;
+using MicroElements.Swashbuckle.FluentValidation;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 

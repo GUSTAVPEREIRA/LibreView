@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile>Api.xml</DocumentationFile>
+      <DocumentationFile>bin\Debug\net6.0\Api.xml</DocumentationFile>
       <NoWarn>1701;1702;1591;1572;1571;1573,1587;1570;</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DocumentationFile>Api.xml</DocumentationFile>
+      <DocumentationFile>bin\Release\net6.0\Api.xml</DocumentationFile>
       <NoWarn>1701;1702;1591;1572;1571;1573,1587;1570;</NoWarn>
     </PropertyGroup>
 
