@@ -7,22 +7,22 @@ namespace Infrastructure.Library;
 
 public class CategoryRepository : BaseRepository, ICategoryRepository
 {
-    private IMapper Mapper { get; set; }
+    private IMapper Mapper { get; }
 
     public CategoryRepository(DatabaseContext context, IMapper mapper) : base(context)
     {
         Mapper = mapper;
     }
 
-    public async Task Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        var category = Context.Categories.First(x => x.Id == id);
+        var category = await Context.Categories.FirstAsync(x => x.Id == id);
 
         Context.Remove(category);
         await Context.SaveChangesAsync();
     }
 
-    public async Task<CategoryResponse> CreateCategory(CategoryCreateRequest categoryCreateRequest)
+    public async Task<CategoryResponse> CreateCategoryAsync(CategoryCreateRequest categoryCreateRequest)
     {
         var category = Mapper.Map<Category>(categoryCreateRequest);
 
@@ -32,7 +32,7 @@ public class CategoryRepository : BaseRepository, ICategoryRepository
         return Mapper.Map<CategoryResponse>(category);
     }
 
-    public async Task<CategoryResponse> UpdateCategory(CategoryUpdateRequest categoryCreateRequest)
+    public async Task<CategoryResponse> UpdateCategoryAsync(CategoryUpdateRequest categoryCreateRequest)
     {
         var category = Mapper.Map<Category>(categoryCreateRequest);
 
@@ -41,5 +41,13 @@ public class CategoryRepository : BaseRepository, ICategoryRepository
         await Context.SaveChangesAsync();
 
         return Mapper.Map<CategoryResponse>(category);
+    }
+
+    public async Task<CategoryResponse> GetCategoryAsync(int id)
+    {
+        var category = await Context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+        await Context.SaveChangesAsync();
+
+        return category != null ? Mapper.Map<CategoryResponse>(category) : null;
     }
 }

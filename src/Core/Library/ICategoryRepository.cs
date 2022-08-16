@@ -4,7 +4,8 @@ namespace Core.Library;
 
 public interface ICategoryRepository
 {
-    public Task Delete(int id);
-    public Task<CategoryResponse> CreateCategory(CategoryCreateRequest categoryCreateRequest);
-    public Task<CategoryResponse> UpdateCategory(CategoryUpdateRequest categoryCreateRequest);
+    public Task DeleteAsync(int id);
+    public Task<CategoryResponse> CreateCategoryAsync(CategoryCreateRequest categoryCreateRequest);
+    public Task<CategoryResponse> UpdateCategoryAsync(CategoryUpdateRequest categoryCreateRequest);
+    public Task<CategoryResponse> GetCategoryAsync(int id);
 }
