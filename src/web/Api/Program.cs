@@ -1,18 +1,22 @@
+using Api.Configurations;
+using Infrastructure.Configurations;
 using Infrastructure.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllerConfiguration();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddFluentValidation();
+builder.Services.AddSwagger();
 builder.Services.AddEntityFramework(builder.Configuration);
+builder.Services.AddDependencyInjection();
+builder.Services.AddAutoMapper();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerConfiguration();
 }
 
 app.UseHttpsRedirection();
