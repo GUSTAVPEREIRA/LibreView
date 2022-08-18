@@ -1,0 +1,13 @@
+USE THIS COMMANDS TO CREATING MIGRATIONS
+
+// Example how to add Migraiton
+dotnet ef --startup-project ../web/Api/ migrations add CreateCategoriesTable
+
+// Update database
+dotnet ef --startup-project ../web/Api/ database update
+
+// Remove Migrations
+dotnet ef --startup-project ../web/Api/ migrations remove
+
+// List Migrations
+dotnet ef --startup-project ../web/Api/ migrations list

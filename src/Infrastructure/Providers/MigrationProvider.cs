@@ -16,7 +16,7 @@ public static class MigrationProvider
         }
         catch (Exception ex)
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<DatabaseContext>>();
             logger.LogError(ex, "Ocorreu um erro na migração ou alimentação de dados");
         }
     }
