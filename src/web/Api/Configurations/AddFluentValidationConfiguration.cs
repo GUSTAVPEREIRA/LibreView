@@ -1,5 +1,4 @@
 using Api.Library;
-using Core.Library.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
