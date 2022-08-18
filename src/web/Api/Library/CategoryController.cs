@@ -20,11 +20,23 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CategoryResponse>> CreateCategoryAsync(CategoryCreateRequest createRequest)
+    public async Task<ActionResult> CreateCategoryAsync(CategoryCreateRequest createRequest)
     {
         var categoryResponse = await _categoryService.CreateCategoryAsync(createRequest);
 
         return CreatedAtAction(nameof(GetCategory), new { id = categoryResponse.Id }, categoryResponse);
+    }
+
+    [HttpPut]
+    [Route("update")]
+    [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdateCategoryAsync(CategoryUpdateRequest updateRequest)
+    {
+        var categoryResponse = await _categoryService.UpdateCategoryAsync(updateRequest);
+
+        return Ok(categoryResponse);
     }
 
     [HttpGet]
@@ -33,7 +45,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("{id:int}")]
-    public async Task<ActionResult<CategoryResponse>> GetCategory(int id)
+    public async Task<ActionResult> GetCategory(int id)
     {
         var categoryResponse = await _categoryService.GetCategoryAsync(id);
 
@@ -43,5 +55,18 @@ public class CategoryController : ControllerBase
         }
 
         return Ok(categoryResponse);
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("delete/{id:int}")]
+    public async Task<ActionResult> DeleteCategory(int id)
+    {
+        await _categoryService.DeleteCategoryAsync(id);
+
+        return NoContent();
     }
 }
