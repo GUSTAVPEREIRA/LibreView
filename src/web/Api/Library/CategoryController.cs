@@ -1,5 +1,6 @@
 using Core.Library;
 using Core.Library.Models;
+using Core.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Library;
@@ -53,6 +54,20 @@ public class CategoryController : ControllerBase
         {
             return NotFound();
         }
+
+        return Ok(categoryResponse);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<CategoryResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("pagination")]
+    public async Task<ActionResult> GetCategoriesByFilters(
+        [FromQuery] PagedRequest<CategoryFiltersRequest> pagedRequest)
+    {
+        var categoryResponse = await _categoryService.GetCategoriesByFilters(pagedRequest);
 
         return Ok(categoryResponse);
     }

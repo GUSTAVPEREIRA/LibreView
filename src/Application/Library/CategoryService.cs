@@ -1,5 +1,6 @@
 using Core.Library;
 using Core.Library.Models;
+using Core.Pagination;
 
 namespace Application.Library;
 
@@ -30,5 +31,10 @@ public class CategoryService : ICategoryService
     public async Task<CategoryResponse> GetCategoryAsync(int id)
     {
         return await _categoryRepository.GetCategoryAsync(id);
+    }   
+    
+    public async Task<PagedResult<CategoryResponse>> GetCategoriesByFilters(PagedRequest<CategoryFiltersRequest> pagedRequest)
+    {
+        return await _categoryRepository.GetCategories(pagedRequest);
     }
 }
