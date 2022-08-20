@@ -2,6 +2,7 @@ using Api.Library;
 using Bogus;
 using Core.Library;
 using Core.Library.Models;
+using Core.Pagination;
 using FakeData.Library;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -79,6 +80,34 @@ public class CategoryControllerTest
 
         response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         _mockCategoryService.Verify(x => x.GetCategoryAsync(It.IsAny<int>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetCategoryByFiltersOk()
+    {
+        var categoryResponses = new CategoriesResponseDataFaker().Generate(new Random().Next(1, 100));
+        var pagedResult = new PagedResult<CategoryResponse>
+        {
+            Results = categoryResponses,
+            CurrentPage = 0,
+            PageCount = categoryResponses.Count,
+            PageSize = 5,
+            RowCount = 5
+        };
+
+        _mockCategoryService.Setup(x => x.GetCategoriesByFilters(It.IsAny<PagedRequest<CategoryFiltersRequest>>()))
+            .ReturnsAsync(pagedResult);
+
+        var response = (ObjectResult)await _categoryController.GetCategoriesByFilters(
+            new PagedRequest<CategoryFiltersRequest>
+            {
+                Page = 1,
+                PageSize = 5
+            });
+
+        response.StatusCode.Should().Be(StatusCodes.Status200OK);
+        _mockCategoryService.Verify(x => x.GetCategoriesByFilters(It.IsAny<PagedRequest<CategoryFiltersRequest>>()),
+            Times.Once);
     }
 
     [Fact]

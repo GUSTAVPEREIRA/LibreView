@@ -2,6 +2,7 @@ using Application.Library;
 using Bogus;
 using Core.Library;
 using Core.Library.Models;
+using Core.Pagination;
 using FakeData.Library;
 using FluentAssertions;
 using Moq;
@@ -62,6 +63,33 @@ public class CategoryServiceTest
 
         result.Should().BeEquivalentTo(categoryResponse);
         _mockCategoryRepository.Verify(x => x.GetCategoryAsync(It.IsAny<int>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetCategoryByFilterAsyncOk()
+    {
+        var categoryResponses = new CategoriesResponseDataFaker().Generate(new Random().Next(1, 100));
+        var pagedResult = new PagedResult<CategoryResponse>
+        {
+            Results = categoryResponses,
+            CurrentPage = 0,
+            PageCount = categoryResponses.Count,
+            PageSize = 5,
+            RowCount = 5
+        };
+
+        _mockCategoryRepository.Setup(x => x.GetCategories(It.IsAny<PagedRequest<CategoryFiltersRequest>>()))
+            .ReturnsAsync(pagedResult);
+
+        var result = await _categoryService.GetCategoriesByFilters(new PagedRequest<CategoryFiltersRequest>
+        {
+            Page = 1,
+            PageSize = 5
+        });
+
+        result.Should().BeEquivalentTo(pagedResult);
+        _mockCategoryRepository.Verify(x => x.GetCategories(It.IsAny<PagedRequest<CategoryFiltersRequest>>()),
+            Times.Once);
     }
 
     [Fact]
