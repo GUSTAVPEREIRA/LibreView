@@ -18,7 +18,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerConfiguration();
 }
-
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials());
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

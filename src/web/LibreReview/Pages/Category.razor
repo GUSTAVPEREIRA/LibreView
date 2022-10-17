@@ -1,0 +1,93 @@
+@page "/category"
+@using Core.Library.Models
+@using Newtonsoft.Json
+@using System.Text
+@using Core.Pagination
+@inject HttpClient Http
+
+<PageTitle>Category</PageTitle>
+<h3>Category</h3>
+
+<form class="row g-3" @onsubmit="CreateCategory" Model="@_categoryCreateRequest">
+    <fieldset class="col-auto">
+        <label for="category-name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="category-name" @bind="_categoryCreateRequest.Name">
+    </fieldset>
+    <fieldset class="row-auto">
+        <label for="category-description" class="form-label">Description</label>
+        <textarea class="form-control" id="category-description" rows="5" @bind="_categoryCreateRequest.Description"></textarea>
+    </fieldset>
+    <fieldset class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">
+            Create
+        </button>
+    </fieldset>
+</form>
+
+@if (CategoryList == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var category in CategoryList)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+
+    private string? InputName { get; set; }
+    private string? InputDescription { get; set; }
+
+    public List<CategoryResponse> CategoryList { get; set; }
+    private CategoryCreateRequest _categoryCreateRequest = new();
+    protected override async Task OnInitializedAsync()
+    {
+        CategoryList = new List<CategoryResponse>();
+
+        var result = await Http.GetAsync("http://localhost:5014/api/Category/pagination?Page=1&PageSize=100");
+        var json = await result.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(json))
+        {
+            var pagedResult = JsonConvert.DeserializeObject<PagedResult<CategoryResponse>>(json);
+            CategoryList = pagedResult?.Results.ToList();
+        }
+
+        base.OnInitialized();
+    }
+
+    private async Task CreateCategory()
+    {
+        var body = JsonConvert.SerializeObject(_categoryCreateRequest);
+
+        var result = await Http.PostAsync("http://localhost:5014/api/Category/create", new StringContent(body, Encoding.UTF8, "application/json"));
+        var jsonResult = await result.Content.ReadAsStringAsync();
+
+        var categoryResponse = JsonConvert.DeserializeObject<CategoryResponse>(jsonResult);
+
+        CategoryList.Add(categoryResponse);
+    }
+
+}
